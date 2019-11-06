@@ -5,6 +5,7 @@ import com.sandeep.demoemployee.entity.Designation;
 import com.sandeep.demoemployee.entity.Employee;
 import com.sandeep.demoemployee.repository.DesignationRepository;
 import com.sandeep.demoemployee.repository.EmployeeRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +40,10 @@ public class EmployeeService {
         Employee employee = new Employee();
         if (crudeEmployee.getManagerId() != null)
             employee.setManagerId(crudeEmployee.getManagerId());
-        if (crudeEmployee.getEmpName() != null)
+        if (!StringUtils.isEmpty(crudeEmployee.getEmpName()))
             employee.setEmpName(crudeEmployee.getEmpName());
         Designation designation = null;
-        if (crudeEmployee.getDesignation() != null)
+        if (!StringUtils.isEmpty(crudeEmployee.getDesignation()))
             designation = designationRepository.getByRoleLike(crudeEmployee.getDesignation());
         employee.setDesignation(designation);
         return employee;
@@ -58,7 +59,7 @@ public class EmployeeService {
 
     //returns total number of employees by designation (was used for debugging)
     public Long getTotalEmployeeByDesignation(Integer id) {
-        return employeeRepository.countAllByDesignation_DsgnId(id);
+        return employeeRepository.count();
     }
 
     public Employee getEmployeeById(int id) {
@@ -130,7 +131,7 @@ public class EmployeeService {
             else
                 return "INVALID_PARENT";
         }
-        if (employee.getEmpName() != null) {
+        if (!StringUtils.isEmpty(employee.getEmpName())) {
             empOld.setEmpName(employee.getEmpName());
         }
         employeeRepository.save(empOld);
@@ -163,10 +164,10 @@ public class EmployeeService {
         } else return emp.getDesignation().getDsgnId() == 1;
     }
 
-    public boolean validateEntry(Employee employee) {
+    public boolean isInvalidateEntry(Employee employee) {
         if (employee.getDesignation() != null && employee.getDesignation().getDsgnId() == 1)
-            return employee.getEmpName() == null || !(employee.getManagerId() == null || employee.getManagerId() == -1);  ///Jugaar to run the test cases
-        return employee.getEmpName() == null || employee.getDesignation() == null || employee.getManagerId() == null;
+            return StringUtils.isEmpty(employee.getEmpName()) || !(employee.getManagerId() == null || employee.getManagerId() == -1);  ///Jugaar to run the test cases
+        return StringUtils.isEmpty(employee.getEmpName()) || employee.getDesignation() == null || employee.getManagerId() == null;
     }
 
     private boolean validateManager(Employee emp, Employee newManager) {
@@ -176,17 +177,17 @@ public class EmployeeService {
     }
 
     public boolean validatePutFalse(CrudeEmployee crudeEmployee, Employee employee) {
-        if (crudeEmployee.getDesignation() != null && employee.getDesignation() == null) {
+        if (!StringUtils.isEmpty(crudeEmployee.getDesignation()) && employee.getDesignation() == null) {
             return false;
         }
-        return employee.getDesignation() != null || employee.getManagerId() != null || employee.getEmpName() != null;
+        return employee.getDesignation() != null || employee.getManagerId() != null || !StringUtils.isEmpty(employee.getEmpName());
     }
 
     //check if data to be updated is valid or not for put-false
-    public String validatePut(CrudeEmployee crudeEmployee, Integer id) {
+    public String validatePutRequest(CrudeEmployee crudeEmployee, Integer id) {
         if (id < 1)
             return "INVALID_ID";
-        if (crudeEmployee.getEmpName() != null && crudeEmployee.getEmpName().matches(".*\\d.*"))
+        if (!StringUtils.isEmpty(crudeEmployee.getEmpName()) && crudeEmployee.getEmpName().matches(".*\\d.*"))
             return "INVALID_NAME";
         if (this.employeeExists(id))                              //check if the employee exists or not
             return "EMP_NOT_EXISTS";
@@ -198,7 +199,7 @@ public class EmployeeService {
         String response = null;
         int oldDsgn = getEmployeeById(id).getDesignation().getDsgnId();
         int newDsgn = empNew.getDesignation().getDsgnId();
-        if (validateEntry(empNew))
+        if (isInvalidateEntry(empNew))
             response = "MISSING_FIELDS";
         else if (oldDsgn != newDsgn && (newDsgn == 1 || oldDsgn == 1))
             response = "INVALID_DIRECTOR";
@@ -222,4 +223,11 @@ public class EmployeeService {
         return employeeResponse;
     }
 
+    public Employee dummyReasponse() {
+        Designation dsgn=new Designation(1,"Director",121);
+        designationRepository.save(dsgn);
+        Employee emp=new Employee(-1,"Thor",dsgn);
+        employeeRepository.save(emp);
+        return emp;
+    }
 }

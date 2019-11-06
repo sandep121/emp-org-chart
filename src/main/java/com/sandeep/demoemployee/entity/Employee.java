@@ -1,13 +1,12 @@
 package com.sandeep.demoemployee.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import com.sandeep.demoemployee.service.EmployeeInterface;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
 @Entity
-public class Employee implements EmployeeInterface {
+public class Employee{
     @Id
     @JsonProperty(value = "id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,12 +23,10 @@ public class Employee implements EmployeeInterface {
     @JoinColumn(name = "DSGN_ID")
     private Designation designation;
 
-    @Override
     public Designation getDesignation() {
         return designation;
     }
 
-    @Override
     public void setDesignation(Designation designation) {
         this.designation = designation;
     }
@@ -52,34 +49,27 @@ public class Employee implements EmployeeInterface {
     public Employee() {
     }
 
-    @Override
     public Integer getEmpId() {
         return empId;
     }
 
-    @Override
     public void setEmpId(int empId) {
         this.empId = empId;
     }
 
-    @Override
     public Integer getManagerId() {
         return managerId;
     }
 
-    @Override
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
     }
 
-    @Override
     public String getEmpName() {
         return empName;
     }
 
-    @Override
     public void setEmpName(String empName) {
         this.empName = empName;
     }
-
 }
