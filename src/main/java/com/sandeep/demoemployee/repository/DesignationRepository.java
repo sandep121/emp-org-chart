@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface DesignationRepository extends CrudRepository<Designation, Integer>
 {
     Designation getByRoleLike(String str);
+    Designation findByDsgnId(Integer id);
 }

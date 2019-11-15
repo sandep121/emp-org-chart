@@ -1,10 +1,10 @@
-insert ignore into designation (LVL_ID, ROLE) values(1,'Director');
-insert ignore into designation (LVL_ID, ROLE) values(2,'Manager');
-insert ignore into designation (LVL_ID, ROLE) values(3,'Lead');
-insert ignore into designation (LVL_ID, ROLE) values(4,'DevOps');
-insert ignore into designation (LVL_ID, ROLE) values(4,'Developer');
-insert ignore into designation (LVL_ID, ROLE) values(4,'QA');
-insert ignore into designation (LVL_ID, ROLE) values(5,'intern');
+insert into designation (LVL_ID, ROLE) values(1,'Director');
+insert into designation (LVL_ID, ROLE) values(2,'Manager');
+insert into designation (LVL_ID, ROLE) values(3,'Lead');
+insert into designation (LVL_ID, ROLE) values(4,'DevOps');
+insert into designation (LVL_ID, ROLE) values(4,'Developer');
+insert into designation (LVL_ID, ROLE) values(4,'QA');
+insert into designation (LVL_ID, ROLE) values(5,'intern');
 
 truncate table employee;
 insert into employee (EMP_NAME, MANAGER_ID, DSGN_ID) values('Thor',-1 ,1);

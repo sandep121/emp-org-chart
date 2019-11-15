@@ -44,7 +44,10 @@ public class EmployeeService {
             employee.setEmpName(crudeEmployee.getEmpName());
         Designation designation = null;
         if (!StringUtils.isEmpty(crudeEmployee.getDesignation()))
+        {
+            crudeEmployee.setDesignation(StringUtils.capitalize(crudeEmployee.getDesignation()));
             designation = designationRepository.getByRoleLike(crudeEmployee.getDesignation());
+        }
         employee.setDesignation(designation);
         return employee;
     }
@@ -223,11 +226,4 @@ public class EmployeeService {
         return employeeResponse;
     }
 
-    public Employee dummyReasponse() {
-        Designation dsgn=new Designation(1,"Director",121);
-        designationRepository.save(dsgn);
-        Employee emp=new Employee(-1,"Thor",dsgn);
-        employeeRepository.save(emp);
-        return emp;
-    }
 }

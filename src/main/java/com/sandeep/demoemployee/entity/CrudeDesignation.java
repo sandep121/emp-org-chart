@@ -5,39 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
-@Entity
-public class Designation
+public class CrudeDesignation
 {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @JsonIgnore
-    private int dsgnId;
-    @Column
     @JsonProperty(value = "jobTitle")
     private String role;
-    @JsonIgnore
     private float lvlId;
 
-    public Designation(int dsgnId, String role, float lvlId) {
-        this.dsgnId = dsgnId;
+    public CrudeDesignation(String role, float lvlId) {
         this.role = role;
         this.lvlId = lvlId;
     }
 
-    public Designation(String role, float lvlId) {
-        this.role = role;
-        this.lvlId = lvlId;
-    }
-
-    public Designation() {
-    }
-
-    public int getDsgnId() {
-        return dsgnId;
-    }
-
-    public void setDsgnId(int dsgnId) {
-        this.dsgnId = dsgnId;
+    public CrudeDesignation() {
     }
 
     public String getRole() {
