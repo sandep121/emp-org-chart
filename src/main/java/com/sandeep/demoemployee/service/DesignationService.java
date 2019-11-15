@@ -40,4 +40,14 @@ public class DesignationService {
         designationRepository.save(designation);
         return designationRepository.findByDsgnId(designation.getDsgnId());
     }
+
+    public Designation jobExists(String jobtitle) {
+        return designationRepository.getByRoleLike(jobtitle);
+
+    }
+
+    public boolean deleteDesignation(Designation designation) {
+        designationRepository.delete(designation);
+        return false;
+    }
 }

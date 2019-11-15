@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
+
 @RestController
 @RequestMapping("/designation")
 @Api
@@ -41,17 +43,26 @@ public class DesignationController {
         if(validateEntry != null)
             return new ResponseEntity<>(validateEntry, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(designationService.addDesignation(designation), HttpStatus.CREATED);
+    }
 
-        //        Employee employee = designationService.getEmpFromCrudeEmp(designation);
-//        if (designationService.isInvalidateEntry(employee))
-//            return new ResponseEntity<>(messages.getMessage("MISSING_FIELDS"), HttpStatus.BAD_REQUEST);
-//        boolean isValidParent = designationService.parentIsValid(employee);
-//        if (employee.getDesignation().getDsgnId() == 1 && designationService.getTotalEmployeeByDesignation(1) != 0) {
-//            return new ResponseEntity<>(messages.getMessage("DIRECTOR_EXISTS"), HttpStatus.BAD_REQUEST);
-//        } else if (!isValidParent) {
-//            return new ResponseEntity<>(messages.getMessage("INVALID_PARENT"), HttpStatus.BAD_REQUEST);
-//        } else
-//            return new ResponseEntity<>(designationService.getEmployeeById(designationService.addEmployee(employee)), HttpStatus.CREATED);
+    @DeleteMapping
+    public ResponseEntity<String> deleteEmployee(Designation designation)
+    {
+        if(designation!=null)
+        {
+            designationService.deleteDesignation(designation);
+            return new ResponseEntity<>(messages.getMessage("DSGN_DELETED"), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(messages.getMessage("not deleted"), HttpStatus.BAD_REQUEST);
+//        if (employeeService.employeeExists(id)) {
+//            return new ResponseEntity<>(MessageFormat.format(messages.getMessage("EMP_NOT_EXISTS"),id), HttpStatus.NOT_FOUND);
+//        } else if (employeeService.getEmployeeById(id).getDesignation().getDsgnId() == 1 && employeeService.getTotalEmployeeCount() != 1) {
+//
+//            return new ResponseEntity<>(messages.getMessage("UNABLE_TO_DELETE_DIRECTOR"), HttpStatus.BAD_REQUEST);
+//        } else if (employeeService.deleteEmployee(id)) {
+//            return new ResponseEntity<>(messages.getMessage("DELETED"), HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>("Unknown error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
