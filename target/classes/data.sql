@@ -4,7 +4,7 @@ insert into designation (LVL_ID, ROLE) values(3,'Lead');
 insert into designation (LVL_ID, ROLE) values(4,'DevOps');
 insert into designation (LVL_ID, ROLE) values(4,'Developer');
 insert into designation (LVL_ID, ROLE) values(4,'QA');
-insert into designation (LVL_ID, ROLE) values(5,'intern');
+insert into designation (LVL_ID, ROLE) values(5,'Intern');
 
 truncate table employee;
 insert into employee (EMP_NAME, MANAGER_ID, DSGN_ID) values('Thor',-1 ,1);

@@ -1,5 +1,6 @@
 package com.sandeep.demoemployee.repository;
 
+import com.sandeep.demoemployee.entity.Designation;
 import com.sandeep.demoemployee.entity.Employee;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,8 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer>
     boolean existsAllByEmpIdIs(int id);
     List<Employee> findAllByManagerIdOrderByDesignation_lvlIdAscEmpNameAsc(int id);
     Employee findByEmpId(Integer id);
+    Long countByDesignation(Designation designation);
+
 }
 
 

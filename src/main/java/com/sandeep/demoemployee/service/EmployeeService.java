@@ -60,9 +60,12 @@ public class EmployeeService {
         }
     }
 
-    //returns total number of employees by designation (was used for debugging)
-    public Long getTotalEmployeeByDesignation(Integer id) {
+    public long getTotalEmployeeByDesignation(Integer id) {                      //refactor it or modify the logic
         return employeeRepository.count();
+    }
+
+    public Long getTotalEmployeeByDesignation(Designation designation) {
+        return employeeRepository.countByDesignation(designation);
     }
 
     public Employee getEmployeeById(int id) {

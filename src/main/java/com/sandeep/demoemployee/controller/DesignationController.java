@@ -4,6 +4,7 @@ package com.sandeep.demoemployee.controller;
 import com.sandeep.demoemployee.entity.CrudeDesignation;
 import com.sandeep.demoemployee.entity.Designation;
 import com.sandeep.demoemployee.service.DesignationService;
+import com.sandeep.demoemployee.service.EmployeeService;
 import com.sandeep.demoemployee.util.Messages;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -19,12 +20,14 @@ import java.text.MessageFormat;
 @Api
 public class DesignationController {
 
+    private final EmployeeService employeeService;
     private final DesignationService designationService;
     private final Messages messages;
 
     @Autowired
-    public DesignationController(DesignationService designationService, Messages messages) {
+    public DesignationController(DesignationService designationService, EmployeeService employeeService, Messages messages) {
         this.designationService = designationService;
+        this.employeeService = employeeService;
         this.messages = messages;
     }
 
@@ -46,14 +49,21 @@ public class DesignationController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteEmployee(Designation designation)
+    public ResponseEntity<String> deleteEmployee(@RequestBody Designation dsgn)
     {
-        if(designation!=null)
+        Designation designation=designationService.jobExists(dsgn);
+        if(designation==null)
         {
-            designationService.deleteDesignation(designation);
-            return new ResponseEntity<>(messages.getMessage("DSGN_DELETED"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(MessageFormat.format(messages.getMessage("DSGN_NOT_FOUND"),dsgn.getRole()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(messages.getMessage("not deleted"), HttpStatus.BAD_REQUEST);
+        if(employeeService.getTotalEmployeeByDesignation(designation)!=0)
+        {
+            return new ResponseEntity<>(MessageFormat.format(messages.getMessage("EMP_EXISTS"),dsgn.getRole()), HttpStatus.BAD_REQUEST);
+        }
+        if(designationService.deleteDesignation(designation))
+            return new ResponseEntity<>(MessageFormat.format(messages.getMessage("DSGN_DELETED"),designation.getRole()), HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>("Unknown error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
 //        if (employeeService.employeeExists(id)) {
 //            return new ResponseEntity<>(MessageFormat.format(messages.getMessage("EMP_NOT_EXISTS"),id), HttpStatus.NOT_FOUND);
 //        } else if (employeeService.getEmployeeById(id).getDesignation().getDsgnId() == 1 && employeeService.getTotalEmployeeCount() != 1) {

@@ -41,13 +41,15 @@ public class DesignationService {
         return designationRepository.findByDsgnId(designation.getDsgnId());
     }
 
-    public Designation jobExists(String jobtitle) {
-        return designationRepository.getByRoleLike(jobtitle);
+    public Designation jobExists(Designation designation) {
+        return designationRepository.getByRoleLike(designation.getRole());
 
     }
 
     public boolean deleteDesignation(Designation designation) {
         designationRepository.delete(designation);
+        if(designationRepository.getByRoleLike(designation.getRole())==null)
+            return true;
         return false;
     }
 }
