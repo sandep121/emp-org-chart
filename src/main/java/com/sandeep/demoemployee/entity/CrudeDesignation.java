@@ -9,11 +9,18 @@ public class CrudeDesignation
 {
     @JsonProperty(value = "jobTitle")
     private String role;
-    private float lvlId;
+    private String reportsTo;
+    private boolean parallel;
 
-    public CrudeDesignation(String role, float lvlId) {
+    public CrudeDesignation(String role, String reportsTo) {
         this.role = role;
-        this.lvlId = lvlId;
+        this.reportsTo = reportsTo;
+    }
+
+    public CrudeDesignation(String role, String reportsTo, boolean parallel) {
+        this.role = role;
+        this.reportsTo = reportsTo;
+        this.parallel = parallel;
     }
 
     public CrudeDesignation() {
@@ -27,11 +34,19 @@ public class CrudeDesignation
         this.role = role;
     }
 
-    public float getLvlId() {
-        return lvlId;
+    public String getReportsTo() {
+        return reportsTo;
     }
 
-    public void setLvlId(float lvlId) {
-        this.lvlId = lvlId;
+    public boolean parallel() {
+        return parallel;
+    }
+
+    public void setParallel(boolean parallel) {
+        this.parallel = parallel;
+    }
+
+    public void setReportsTo(String reportsTo) {
+        this.reportsTo = reportsTo;
     }
 }

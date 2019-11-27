@@ -16,15 +16,15 @@ public class Designation
     @JsonProperty(value = "jobTitle")
     private String role;
     @JsonIgnore
-    private float lvlId;
+    private Float lvlId;
 
-    public Designation(int dsgnId, String role, float lvlId) {
+    public Designation(int dsgnId, String role, Float lvlId) {
         this.dsgnId = dsgnId;
         this.role = role;
         this.lvlId = lvlId;
     }
 
-    public Designation(String role, float lvlId) {
+    public Designation(String role, Float lvlId) {
         this.role = role;
         this.lvlId = lvlId;
     }
@@ -48,11 +48,11 @@ public class Designation
         this.role = role;
     }
 
-    public float getLvlId() {
+    public Float getLvlId() {
         return lvlId;
     }
 
-    public void setLvlId(float lvlId) {
+    public void setLvlId(Float lvlId) {
         this.lvlId = lvlId;
     }
 }

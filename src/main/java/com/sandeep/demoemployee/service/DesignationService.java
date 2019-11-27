@@ -1,6 +1,7 @@
 package com.sandeep.demoemployee.service;
 
 
+import com.sandeep.demoemployee.entity.CrudeDesignation;
 import com.sandeep.demoemployee.entity.Designation;
 import com.sandeep.demoemployee.repository.DesignationRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -21,22 +22,7 @@ public class DesignationService {
         return designationRepository.findAll();
     }
 
-
-    public String isValidEntry(Designation designation) {
-        if(designation.getLvlId()<0)
-        {
-            return "Designation level cannot be -ve";
-        }
-        if(designationRepository.getByRoleLike(designation.getRole())!=null)
-        {
-            return "This designation already exists";
-        }
-        return null;
-    }
-
-
     public Designation addDesignation(Designation designation) {
-        designation.setRole(StringUtils.capitalize(designation.getRole()));
         designationRepository.save(designation);
         return designationRepository.findByDsgnId(designation.getDsgnId());
     }
@@ -48,8 +34,42 @@ public class DesignationService {
 
     public boolean deleteDesignation(Designation designation) {
         designationRepository.delete(designation);
-        if(designationRepository.getByRoleLike(designation.getRole())==null)
-            return true;
-        return false;
+        return designationRepository.getByRoleLike(designation.getRole()) == null;
+    }
+
+    public Designation getDesignationFromCrudeDsgn(CrudeDesignation crudeDesignation) {
+        //if(StringUtils.isEmpty(c))
+        Designation senior=designationRepository.getByRoleLike(crudeDesignation.getReportsTo());
+        Float nextLvl=designationRepository.nextLevel(senior.getLvlId());
+        if(nextLvl==null)
+        {
+            nextLvl=designationRepository.maxLvlId()+1;
+            crudeDesignation.setParallel(true);
+        }
+
+        Designation newDesignation= new Designation();
+        newDesignation.setRole(crudeDesignation.getRole());
+        if(crudeDesignation.parallel())
+            newDesignation.setLvlId(nextLvl);
+        else
+            newDesignation.setLvlId((nextLvl+senior.getLvlId())/2);
+        return newDesignation;
+    }
+
+    public String isInvalidateEntry(CrudeDesignation crudeDesignation) {
+
+        if(designationRepository.getByRoleLike(crudeDesignation.getReportsTo())==null && designationRepository.count()!=0)
+        {
+            return "invalid senior";
+        }
+        crudeDesignation.setRole(StringUtils.capitalize(crudeDesignation.getRole()));
+        if(designationRepository.getByRoleLike(crudeDesignation.getRole())!=null)
+        {
+            return "Designation already Exists";
+        }
+
+
+
+        return null;
     }
 }

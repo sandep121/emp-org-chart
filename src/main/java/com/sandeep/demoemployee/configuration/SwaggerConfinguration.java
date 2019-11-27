@@ -21,7 +21,7 @@ class SwaggerConfiguration {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Spring Boot REST API")
+        return new ApiInfoBuilder().title("Employee Management System\n(Organization Chart)")
                 .version("1.0.0")
                 .build();
     }

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.MessageFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/designation")
@@ -32,19 +33,31 @@ public class DesignationController {
     }
 
     @GetMapping
-    public ResponseEntity getAllEmployee() {
+    public ResponseEntity getAllDesignations() {
         return new ResponseEntity<>(designationService.getAllDesignations(), HttpStatus.OK);
+    }
+    @GetMapping("/")
+    public ResponseEntity getDetailedDesignation(){                                         //used for debugging
+        List<Designation> allDesignation=new ArrayList((Collection) designationService.getAllDesignations());
+        Map<String, String> dsgn = new HashMap<String, String>();
+        allDesignation.forEach(
+                designation -> {
+                    dsgn.put(designation.getRole(),designation.getLvlId().toString());
+                }
+                );
+        return new ResponseEntity<>(dsgn, HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity addEmployee(@RequestBody CrudeDesignation crudeDesignation) {
-        //crude is needed for LvlId field
-        Designation designation=new Designation(crudeDesignation.getRole(), crudeDesignation.getLvlId());
-        if (StringUtils.isEmpty(designation.getRole()) || designation.getRole().matches(".*\\d.*"))
-            return new ResponseEntity<>("Please Enter a valid designation", HttpStatus.BAD_REQUEST);
-
-        String validateEntry=designationService.isValidEntry(designation);
-        if(validateEntry != null)
-            return new ResponseEntity<>(validateEntry, HttpStatus.BAD_REQUEST);
+        //crude is needed for reportsTo field
+        crudeDesignation.setRole(StringUtils.capitalize(crudeDesignation.getRole()));
+        crudeDesignation.setReportsTo(StringUtils.capitalize(crudeDesignation.getReportsTo()));
+        String validation=designationService.isInvalidateEntry(crudeDesignation);
+        if(validation!=null)
+        {
+            return new ResponseEntity<>(validation,HttpStatus.BAD_REQUEST);
+        }
+            Designation designation=designationService.getDesignationFromCrudeDsgn(crudeDesignation);
         return new ResponseEntity<>(designationService.addDesignation(designation), HttpStatus.CREATED);
     }
 
